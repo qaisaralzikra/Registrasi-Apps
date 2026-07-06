@@ -13,11 +13,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+
+            // Relasi ke tabel events
+            $table->foreignId('id_events')
+                ->constrained('events')
+                ->onDelete('cascade'); // Jika event dihapus, user di dalamnya ikut terhapus
+
+            // Status kehadiran menggunakan ENUM sesuai kebutuhan Anda
+            $table->enum('status', ['hadir', 'belum hadir', 'tidak hadir'])->default('belum hadir');
+
             $table->timestamps();
         });
 

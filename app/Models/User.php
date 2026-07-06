@@ -2,31 +2,38 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Fillable;
-use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-#[Fillable(['name', 'email', 'password'])]
-#[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Model
 {
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory;
+
+    protected $guarded = [];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Mengetahui user ini terdaftar di event mana.
      */
-    protected function casts(): array
+    public function event(): BelongsTo
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(Event::class, 'id_events');
+    }
+
+    /**
+     * Dapatkan data hasil jawaban registrasi milik user ini (One-to-One).
+     */
+    public function registrasi(): HasOne
+    {
+        return $this->hasOne(Registrasi::class, 'id_user');
+    }
+
+    /**
+     * Dapatkan data QR Code milik user ini.
+     */
+    public function qrCode(): HasOne
+    {
+        return $this->hasOne(QrCode::class, 'id_user');
     }
 }
