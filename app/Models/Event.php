@@ -2,41 +2,44 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Event extends Model
+
+class Event extends Model implements AuthenticatableContract
 {
-    use HasFactory;
+    use HasFactory, Authenticatable;
 
     protected $guarded = [];
 
-    // Otomatis mengubah JSON menjadi Array PHP saat dibaca, dan sebaliknya
     protected $casts = [
         'custom_fields_template' => 'array',
         'date_time_event' => 'datetime',
     ];
 
-    /**
-     * Dapatkan semua user yang mendaftar di event ini.
-     */
+    protected static function booted(): void
+    {
+        //
+    }
+
+    public function setPasswordAttribute(string $value): void
+    {
+        $this->attributes['password'] = bcrypt($value);
+    }
+
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'id_events');
     }
 
-    /**
-     * Dapatkan semua data formulir registrasi dari event ini.
-     */
     public function registrasis(): HasMany
     {
         return $this->hasMany(Registrasi::class, 'id_event');
     }
 
-    /**
-     * Dapatkan semua tiket QR yang dicetak untuk event ini.
-     */
     public function qrCodes(): HasMany
     {
         return $this->hasMany(QrCode::class, 'id_event');

@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
+            $table->string('title_event');
+            $table->string('subtitle_event')->nullable();
+            $table->string('password')->nullable(); // Jika event butuh password masuk
+            $table->text('desc_event')->nullable();
+            $table->timestamp('date_time_event')->nullable();
+            $table->string('venue')->nullable();
+            
+            // Menyimpan template struktur input dari form builder admin
+            $table->json('custom_fields_template')->nullable(); 
+            
             $table->timestamps();
         });
     }

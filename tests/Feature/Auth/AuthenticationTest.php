@@ -1,6 +1,13 @@
 <?php
 
-use App\Models\User;
+use App\Models\Event;
+
+beforeEach(function () {
+    $this->event = Event::factory()->create([
+        'title_event' => 'DevSummit 2025',
+        'password' => 'secret123',
+    ]);
+});
 
 test('login screen can be rendered', function () {
     $response = $this->get('/login');
@@ -8,33 +15,27 @@ test('login screen can be rendered', function () {
     $response->assertStatus(200);
 });
 
-test('users can authenticate using the login screen', function () {
-    $user = User::factory()->create();
-
+test('events can authenticate using the login screen', function () {
     $response = $this->post('/login', [
-        'email' => $user->email,
-        'password' => 'password',
+        'title_event' => 'DevSummit 2025',
+        'password' => 'secret123',
     ]);
 
     $this->assertAuthenticated();
     $response->assertRedirect(route('dashboard', absolute: false));
 });
 
-test('users can not authenticate with invalid password', function () {
-    $user = User::factory()->create();
-
+test('events can not authenticate with invalid password', function () {
     $this->post('/login', [
-        'email' => $user->email,
+        'title_event' => 'DevSummit 2025',
         'password' => 'wrong-password',
     ]);
 
     $this->assertGuest();
 });
 
-test('users can logout', function () {
-    $user = User::factory()->create();
-
-    $response = $this->actingAs($user)->post('/logout');
+test('events can logout', function () {
+    $response = $this->actingAs($this->event)->post('/logout');
 
     $this->assertGuest();
     $response->assertRedirect('/');
