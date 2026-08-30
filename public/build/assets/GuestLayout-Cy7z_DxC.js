@@ -1,1 +1,0 @@
-import{n as e}from"./app-Ci3QQ_5E.js";var t=e();function n({children:e}){return(0,t.jsx)(`div`,{className:`min-h-screen bg-[#012b52] text-slate-100`,children:(0,t.jsx)(`div`,{className:`flex min-h-screen items-center justify-center px-4 py-12`,children:(0,t.jsx)(`div`,{className:`w-full max-w-md`,children:e})})})}export{n as t};
