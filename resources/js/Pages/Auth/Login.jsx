@@ -18,7 +18,7 @@ export default function Login({ status }) {
 
     return (
         <GuestLayout>
-            <Head title="Sign In" />
+            <Head title="Login Admin - Relate House" />
 
             <div className="overflow-hidden rounded-[32px] border border-white/10 bg-slate-900/95 px-8 py-10 shadow-[0_40px_120px_rgba(15,23,42,0.45)]">
                 <div className="mb-10 text-center">

@@ -10,7 +10,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('Auth/Login', [
         'canLogin' => Route::has('login'),
         'phpVersion' => PHP_VERSION,
     ]);
