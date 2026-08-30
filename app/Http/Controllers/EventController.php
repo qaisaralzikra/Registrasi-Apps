@@ -15,6 +15,24 @@ class EventController extends Controller
         return Inertia::render('Event/Create');
     }
 
+    public function user($event): Response
+    {
+        $event = Event::where('title_event', $event)->first();
+
+        return inertia('Event/User', [
+            'event' => [
+                'id' => $event->id,
+                'title_event' => $event->title_event,
+                'subtitle_event' => $event->subtitle_event,
+                'desc_event' => $event->desc_event,
+                'hari' => $event->date_time_event?->translatedFormat('l'), // Contoh: Sabtu
+                'date' => $event->date_time_event?->format('d M Y'),        // Contoh: 26 Jul 2025
+                'time' => $event->date_time_event?->format('H:i'),          // Contoh: 08:00 (dalam format 24 jam)
+                'venue' => $event->venue,
+            ],
+        ]);
+    }
+
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([

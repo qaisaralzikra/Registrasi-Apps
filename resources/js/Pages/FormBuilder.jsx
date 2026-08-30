@@ -125,7 +125,7 @@ export default function FormBuilder({ template: initialTemplate }) {
                 </div>
             }
         >
-            <Head title="Form Builder" />
+            <Head title="Form Builder - Relate House" />
 
             <div className="px-6 py-8">
                 <div className="grid gap-6 xl:grid-cols-[1.4fr_0.8fr]">

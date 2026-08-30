@@ -11,14 +11,18 @@ class DashboardControllers extends Controller
         $event = auth()->user();
 
         $totalRegistrated = $event->users()->count();
-        $totalConfirmed = $event->users()->where('status', 'hadir')->count();
-        $totalPending = $event->users()->where('status', 'belum hadir')->count();
+        $totalScanned = \App\Models\QrCode::where('id_event', $event->id)
+            ->where('is_used', true)
+            ->count();
+        $totalPending = \App\Models\QrCode::where('id_event', $event->id)
+            ->where('is_used', false)
+            ->count();
 
         $template = $event->custom_fields_template ?? [];
         $columns = collect($template)
-            ->filter(fn ($f) => $f['active'] ?? true)
+            ->filter(fn($f) => $f['active'] ?? true)
             ->values()
-            ->map(fn ($f) => [
+            ->map(fn($f) => [
                 'label' => $f['label'],
                 'key' => $f['key'],
             ]);
@@ -47,6 +51,7 @@ class DashboardControllers extends Controller
 
                 return [
                     'data' => $row,
+                    'id_registrasi' => $item->id,
                     'status' => $item->is_used ? 'confirmed' : ($item->status === 'hadir' ? 'confirmed' : 'pending'),
                     'timestamp' => $item->created_at,
                 ];
@@ -63,7 +68,7 @@ class DashboardControllers extends Controller
             ],
             'stats' => [
                 'total' => $totalRegistrated,
-                'confirmed' => $totalConfirmed,
+                'confirmed' => $totalScanned,
                 'pending' => $totalPending,
             ],
             'columns' => $columns,

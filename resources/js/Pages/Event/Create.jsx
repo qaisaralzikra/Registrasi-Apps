@@ -20,7 +20,7 @@ export default function EventCreate() {
 
     return (
         <GuestLayout>
-            <Head title="Create Event" />
+            <Head title="Create Event - Relate House" />
 
             <div className="w-full max-w-2xl">
                 <div className="overflow-hidden rounded-[32px] border border-white/10 bg-slate-900/95 px-8 py-10 shadow-[0_40px_120px_rgba(15,23,42,0.45)]">

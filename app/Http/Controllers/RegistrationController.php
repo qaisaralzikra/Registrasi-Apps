@@ -14,14 +14,16 @@ use Inertia\Response;
 
 class RegistrationController extends Controller
 {
-    public function create(Event $event): Response
+    public function create($events): Response
     {
+        $event = Event::where('title_event', $events)->first();
+
         return Inertia::render('Registration/Create', [
             'event' => [
                 'id' => $event->id,
                 'title_event' => $event->title_event,
                 'subtitle_event' => $event->subtitle_event,
-                'date_time_event' => $event->date_time_event?->format('d MMM yyyy'),
+                'date_time_event' => $event->date_time_event?->format('d M Y'),
                 'venue' => $event->venue,
                 'fields' => $event->custom_fields_template ?? [
                     ['label' => 'Full Name', 'key' => 'full_name', 'type' => 'text', 'required' => true],
@@ -34,8 +36,9 @@ class RegistrationController extends Controller
         ]);
     }
 
-    public function store(Request $request, Event $event): RedirectResponse
+    public function store(Request $request, $events): RedirectResponse
     {
+        $event = Event::where('title_event', $events)->firstOrFail();
         $fields = $event->custom_fields_template ?? [
             ['label' => 'Full Name', 'key' => 'full_name', 'type' => 'text', 'required' => true],
             ['label' => 'Email Address', 'key' => 'email', 'type' => 'email', 'required' => true],
@@ -83,28 +86,47 @@ class RegistrationController extends Controller
             'is_used' => false,
         ]);
 
-        return redirect()->route('events.register.success', ['event' => $event->id, 'token' => $token]);
+        return redirect()->route('events.register.success', ['events' => $event->title_event, 'token' => $token]);
     }
 
-    public function success(Event $event, string $token): Response
+    public function success($events, string $token): Response
     {
+        $event = Event::where('title_event', $events)->firstOrFail();
         $qr = QrCode::where('qr_token', $token)->where('id_event', $event->id)->firstOrFail();
         $user = $qr->user;
         $registrasi = $user->registrasi;
-        $fields = $registrasi->custom_field_values ?? [];
+
+        // Ambil data yang diinput user
+        $submittedValues = $registrasi->custom_field_values ?? [];
+
+        // Ambil template field event (fallback ke default jika null)
+        $fieldsTemplate = $event->custom_fields_template ?? [
+            ['label' => 'Full Name', 'key' => 'full_name', 'type' => 'text', 'required' => true],
+            ['label' => 'Email Address', 'key' => 'email', 'type' => 'email', 'required' => true],
+            ['label' => 'Phone Number', 'key' => 'phone', 'type' => 'tel', 'required' => true],
+            ['label' => 'Organization / Company', 'key' => 'organization', 'type' => 'text', 'required' => false],
+            ['label' => 'Role / Title', 'key' => 'role', 'type' => 'text', 'required' => true],
+        ];
+
+        // Petakan template dengan nilai yang diinput user
+        $attendeeDetails = [];
+        foreach ($fieldsTemplate as $field) {
+            $key = $field['key'];
+            $attendeeDetails[] = [
+                'label' => $field['label'],
+                'key' => $key,
+                'value' => $submittedValues[$key] ?? '-',
+            ];
+        }
 
         return Inertia::render('Registration/Success', [
             'event' => [
                 'id' => $event->id,
                 'title_event' => $event->title_event,
-                'date_time_event' => $event->date_time_event?->format('d MMM yyyy'),
+                'date_time_event' => $event->date_time_event?->format('d M Y'),
                 'venue' => $event->venue,
             ],
-            'attendee' => [
-                'name' => $fields['full_name'] ?? $fields['Full Name'] ?? '-',
-                'email' => $fields['email'] ?? $fields['Email Address'] ?? '-',
-                'role' => $fields['role'] ?? $fields['Role / Title'] ?? '-',
-            ],
+            'attendeeDetails' => $attendeeDetails, // Kirim data dinamis ke frontend
             'token' => $qr->qr_token,
             'status' => $qr->is_used ? 'confirmed' : 'pending',
         ]);
