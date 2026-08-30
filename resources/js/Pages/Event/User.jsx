@@ -37,7 +37,7 @@ function InfoItem({ icon: Icon, label, children }) {
 }
 
 function User({ event }) {
-    const registrationUrl = "https://invitation.relatehouse.id/user/business%20connection%20indonesia%20-%20china";
+    const registrationUrl = "https://invitation.relatehouse.id/events/BUSINESS%20CONNECTION%20INDONESIA%20-%20CHINA/register";
 
     return (
         <div className="relative min-h-screen overflow-hidden bg-[#012b52] text-white">
