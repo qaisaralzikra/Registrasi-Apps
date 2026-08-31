@@ -156,7 +156,7 @@ export default function Dashboard({ event, stats, columns, registrants }) {
                                                         key={col.key}
                                                         className="px-6 py-5 text-slate-200"
                                                     >
-                                                        <div className="max-w-[220px] truncate">
+                                                        <div className="max-w-[220px]">
                                                             {registrant.data[
                                                                 col.key
                                                             ] ?? "-"}

@@ -26,6 +26,7 @@ class FormBuilderController extends Controller
             'template.*.key' => ['required', 'string', 'max:255'],
             'template.*.type' => ['required', 'string', 'in:text,email,phone,textarea,select,number,date,file'],
             'template.*.required' => ['required', 'boolean'],
+            'template.*.allowMultiple' => ['nullable', 'boolean'],
             'template.*.active' => ['required', 'boolean'],
             'template.*.options' => ['nullable', 'array'],
         ]);

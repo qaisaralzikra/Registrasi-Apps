@@ -24,7 +24,7 @@ class DashboardControllers extends Controller
             ->values()
             ->map(fn($f) => [
                 'label' => $f['label'],
-                'key' => $f['key'],
+                'key'   => $f['key'],
             ]);
 
         $registrants = DB::table('users')
@@ -46,32 +46,49 @@ class DashboardControllers extends Controller
 
                 $row = [];
                 foreach ($columns as $col) {
-                    $row[$col['key']] = $fields[$col['key']] ?? $fields[$col['label']] ?? '-';
+                    $rawVal = $fields[$col['key']] ?? $fields[$col['label']] ?? null;
+
+                    // Format jika data berupa Array (Multi-Input / Multiple Values)
+                    if (is_array($rawVal)) {
+                        $filteredVals = array_filter($rawVal, fn($v) => !is_null($v) && $v !== '');
+
+                        if (empty($filteredVals)) {
+                            $row[$col['key']] = '-';
+                        } elseif (count($filteredVals) === 1) {
+                            $row[$col['key']] = reset($filteredVals);
+                        } else {
+                            // Gabungkan array menjadi "data 1 & data 2" (atau "A, B & C")
+                            $lastItem = array_pop($filteredVals);
+                            $row[$col['key']] = implode(', ', $filteredVals) . ' & ' . $lastItem;
+                        }
+                    } else {
+                        $row[$col['key']] = $rawVal ?? '-';
+                    }
                 }
 
                 return [
-                    'data' => $row,
+                    'data'          => $row,
                     'id_registrasi' => $item->id,
-                    'status' => $item->is_used ? 'confirmed' : ($item->status === 'hadir' ? 'confirmed' : 'pending'),
-                    'timestamp' => $item->created_at,
+                    'status'        => $item->is_used ? 'confirmed' : ($item->status === 'hadir' ? 'confirmed' : 'pending'),
+                    'timestamp'     => $item->created_at,
                 ];
             });
 
         return inertia('Dashboard', [
             'event' => [
-                'id' => $event->id,
-                'title_event' => $event->title_event,
-                'subtitle_event' => $event->subtitle_event,
-                'desc_event' => $event->desc_event,
+                'id'              => $event->id,
+                'title_event'     => $event->title_event,
+                'subtitle_event'  => $event->subtitle_event,
+                'desc_event'      => $event->desc_event,
                 'date_time_event' => $event->date_time_event?->format('Y-m-d H:i'),
-                'venue' => $event->venue,
+                'venue'           => $event->venue,
             ],
             'stats' => [
-                'total' => $totalRegistrated,
+                'total'     => $totalRegistrated,
                 'confirmed' => $totalScanned,
-                'pending' => $totalPending,
+                'pending'   => $totalPending,
             ],
-            'columns' => $columns,
+            'columns'     => $columns,
             'registrants' => $registrants,
         ]);
     }

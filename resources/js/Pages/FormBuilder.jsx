@@ -1,42 +1,43 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, Link, router } from '@inertiajs/react';
-import { useState } from 'react';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head, Link, router } from "@inertiajs/react";
+import { useState } from "react";
 
 const fieldTypes = [
-    { value: 'text', label: 'Text' },
-    { value: 'email', label: 'Email' },
-    { value: 'phone', label: 'Phone' },
-    { value: 'textarea', label: 'Textarea' },
-    { value: 'select', label: 'Select' },
-    { value: 'number', label: 'Number' },
-    { value: 'date', label: 'Date' },
-    { value: 'file', label: 'File' },
+    { value: "text", label: "Text" },
+    { value: "email", label: "Email" },
+    { value: "phone", label: "Phone" },
+    { value: "textarea", label: "Textarea" },
+    { value: "select", label: "Select" },
+    { value: "number", label: "Number" },
+    { value: "date", label: "Date" },
+    { value: "file", label: "File" },
 ];
 
 function slugify(text) {
     return text
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '_')
-        .replace(/^_|_$/g, '');
+        .replace(/[^a-z0-9]+/g, "_")
+        .replace(/^_|_$/g, "");
 }
 
 const typeIcons = {
-    text: 'T',
-    email: '@',
-    phone: '📞',
-    textarea: '¶',
-    select: '≡',
-    number: '#',
-    date: '📅',
-    file: '⬆',
+    text: "T",
+    email: "@",
+    phone: "📞",
+    textarea: "¶",
+    select: "≡",
+    number: "#",
+    date: "📅",
+    file: "⬆",
 };
 
 export default function FormBuilder({ template: initialTemplate }) {
     const [fields, setFields] = useState(initialTemplate ?? []);
-    const [newLabel, setNewLabel] = useState('');
-    const [newType, setNewType] = useState('text');
+    const [newLabel, setNewLabel] = useState("");
+    const [newType, setNewType] = useState("text");
     const [newRequired, setNewRequired] = useState(false);
-    const [newOptions, setNewOptions] = useState('');
+    const [newAllowMultiple, setNewAllowMultiple] = useState(false);
+    const [newOptions, setNewOptions] = useState("");
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
 
@@ -55,17 +56,23 @@ export default function FormBuilder({ template: initialTemplate }) {
                 key,
                 type: newType,
                 required: newRequired,
+                allowMultiple: newAllowMultiple,
                 active: true,
-                options: newType === 'select' && newOptions.trim()
-                    ? newOptions.split(',').map((o) => o.trim()).filter(Boolean)
-                    : null,
+                options:
+                    newType === "select" && newOptions.trim()
+                        ? newOptions
+                              .split(",")
+                              .map((o) => o.trim())
+                              .filter(Boolean)
+                        : null,
             },
         ]);
 
-        setNewLabel('');
-        setNewType('text');
+        setNewLabel("");
+        setNewType("text");
         setNewRequired(false);
-        setNewOptions('');
+        setNewAllowMultiple(false);
+        setNewOptions("");
         setSaved(false);
     }
 
@@ -76,7 +83,9 @@ export default function FormBuilder({ template: initialTemplate }) {
 
     function toggleActive(index) {
         setFields(
-            fields.map((f, i) => (i === index ? { ...f, active: !f.active } : f)),
+            fields.map((f, i) =>
+                i === index ? { ...f, active: !f.active } : f,
+            ),
         );
         setSaved(false);
     }
@@ -93,18 +102,22 @@ export default function FormBuilder({ template: initialTemplate }) {
     function saveTemplate() {
         setSaving(true);
 
-        router.post(route('form.builder.update'), {
-            template: fields,
-        }, {
-            preserveScroll: true,
-            onSuccess: () => {
-                setSaved(true);
-                setSaving(false);
+        router.post(
+            route("form.builder.update"),
+            {
+                template: fields,
             },
-            onError: () => {
-                setSaving(false);
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setSaved(true);
+                    setSaving(false);
+                },
+                onError: () => {
+                    setSaving(false);
+                },
             },
-        });
+        );
     }
 
     return (
@@ -112,7 +125,7 @@ export default function FormBuilder({ template: initialTemplate }) {
             header={
                 <div className="flex items-center gap-4">
                     <Link
-                        href={route('dashboard')}
+                        href={route("dashboard")}
                         className="rounded-full border border-white/10 bg-slate-900/90 px-4 py-2 text-sm font-medium text-slate-300 transition hover:border-slate-500 hover:text-white"
                     >
                         ← Back
@@ -144,13 +157,18 @@ export default function FormBuilder({ template: initialTemplate }) {
                                 disabled={saving}
                                 className="rounded-3xl bg-violet-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-60"
                             >
-                                {saving ? 'Saving...' : saved ? 'Saved ✓' : 'Save'}
+                                {saving
+                                    ? "Saving..."
+                                    : saved
+                                      ? "Saved ✓"
+                                      : "Save"}
                             </button>
                         </div>
 
                         {fields.length === 0 && (
                             <p className="mt-8 text-center text-sm text-slate-500">
-                                No fields yet. Add one from the panel on the right.
+                                No fields yet. Add one from the panel on the
+                                right.
                             </p>
                         )}
 
@@ -159,21 +177,23 @@ export default function FormBuilder({ template: initialTemplate }) {
                                 <div
                                     key={field.key}
                                     className={
-                                        'flex items-center justify-between rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-4 transition ' +
+                                        "flex items-center justify-between rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-4 transition " +
                                         (field.active
-                                            ? 'shadow-[0_20px_50px_-30px_rgba(15,23,42,0.8)]'
-                                            : 'opacity-70')
+                                            ? "shadow-[0_20px_50px_-30px_rgba(15,23,42,0.8)]"
+                                            : "opacity-70")
                                     }
                                 >
                                     <div className="flex items-center gap-4">
                                         <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-slate-800 text-lg text-slate-300">
-                                            {typeIcons[field.type] ?? 'T'}
+                                            {typeIcons[field.type] ?? "T"}
                                         </div>
                                         <div>
                                             <p className="text-base font-semibold text-white">
-                                                {field.label}{' '}
+                                                {field.label}{" "}
                                                 {field.required && (
-                                                    <span className="text-sm font-medium text-rose-400">required</span>
+                                                    <span className="text-sm font-medium text-rose-400">
+                                                        required
+                                                    </span>
                                                 )}
                                             </p>
                                             <p className="text-sm text-slate-500">
@@ -192,7 +212,9 @@ export default function FormBuilder({ template: initialTemplate }) {
                                         </button>
                                         <button
                                             onClick={() => moveField(index, 1)}
-                                            disabled={index === fields.length - 1}
+                                            disabled={
+                                                index === fields.length - 1
+                                            }
                                             className="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-800 text-slate-400 transition hover:bg-slate-700 hover:text-white disabled:opacity-30"
                                         >
                                             ↓
@@ -200,13 +222,13 @@ export default function FormBuilder({ template: initialTemplate }) {
                                         <button
                                             onClick={() => toggleActive(index)}
                                             className={
-                                                'inline-flex h-10 w-10 items-center justify-center rounded-2xl transition ' +
+                                                "inline-flex h-10 w-10 items-center justify-center rounded-2xl transition " +
                                                 (field.active
-                                                    ? 'bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20'
-                                                    : 'bg-slate-800 text-slate-500 hover:bg-slate-700')
+                                                    ? "bg-emerald-500/10 text-emerald-300 hover:bg-emerald-500/20"
+                                                    : "bg-slate-800 text-slate-500 hover:bg-slate-700")
                                             }
                                         >
-                                            {field.active ? '✓' : '○'}
+                                            {field.active ? "✓" : "○"}
                                         </button>
                                         <button
                                             onClick={() => removeField(index)}
@@ -233,7 +255,9 @@ export default function FormBuilder({ template: initialTemplate }) {
                                     <input
                                         type="text"
                                         value={newLabel}
-                                        onChange={(e) => setNewLabel(e.target.value)}
+                                        onChange={(e) =>
+                                            setNewLabel(e.target.value)
+                                        }
                                         placeholder="Field label..."
                                         className="w-full rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-3 text-sm text-slate-100 outline-none ring-1 ring-transparent transition focus:border-violet-300 focus:ring-violet-500/20"
                                     />
@@ -249,17 +273,22 @@ export default function FormBuilder({ template: initialTemplate }) {
                                     </label>
                                     <select
                                         value={newType}
-                                        onChange={(e) => setNewType(e.target.value)}
+                                        onChange={(e) =>
+                                            setNewType(e.target.value)
+                                        }
                                         className="w-full rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-3 text-sm text-slate-100 outline-none ring-1 ring-transparent transition focus:border-violet-300 focus:ring-violet-500/20"
                                     >
                                         {fieldTypes.map((t) => (
-                                            <option key={t.value} value={t.value}>
+                                            <option
+                                                key={t.value}
+                                                value={t.value}
+                                            >
                                                 {t.label}
                                             </option>
                                         ))}
                                     </select>
                                 </div>
-                                {newType === 'select' && (
+                                {newType === "select" && (
                                     <div>
                                         <label className="mb-2 block text-sm font-semibold text-slate-300">
                                             Options (comma-separated)
@@ -267,7 +296,9 @@ export default function FormBuilder({ template: initialTemplate }) {
                                         <input
                                             type="text"
                                             value={newOptions}
-                                            onChange={(e) => setNewOptions(e.target.value)}
+                                            onChange={(e) =>
+                                                setNewOptions(e.target.value)
+                                            }
                                             placeholder="Option 1, Option 2, Option 3"
                                             className="w-full rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-3 text-sm text-slate-100 outline-none ring-1 ring-transparent transition focus:border-violet-300 focus:ring-violet-500/20"
                                         />
@@ -277,10 +308,26 @@ export default function FormBuilder({ template: initialTemplate }) {
                                     <input
                                         type="checkbox"
                                         checked={newRequired}
-                                        onChange={(e) => setNewRequired(e.target.checked)}
+                                        onChange={(e) =>
+                                            setNewRequired(e.target.checked)
+                                        }
                                         className="h-4 w-4 rounded border-slate-700 bg-slate-800 text-violet-500 focus:ring-violet-500"
                                     />
                                     Required field
+                                </label>
+                                {/* Checkbox Allow Multiple (Maks 2 Jawaban) */}
+                                <label className="flex items-center gap-3 text-sm text-slate-300">
+                                    <input
+                                        type="checkbox"
+                                        checked={newAllowMultiple}
+                                        onChange={(e) =>
+                                            setNewAllowMultiple(
+                                                e.target.checked,
+                                            )
+                                        }
+                                        className="h-4 w-4 rounded border-slate-700 bg-slate-800 text-violet-500 focus:ring-violet-500"
+                                    />
+                                    Izinkan hingga 2 jawaban (Multiple)
                                 </label>
                                 <button
                                     onClick={addField}
@@ -297,7 +344,9 @@ export default function FormBuilder({ template: initialTemplate }) {
                                 Active Fields
                             </h3>
                             {fields.filter((f) => f.active).length === 0 ? (
-                                <p className="mt-5 text-sm text-slate-500">No active fields.</p>
+                                <p className="mt-5 text-sm text-slate-500">
+                                    No active fields.
+                                </p>
                             ) : (
                                 <ul className="mt-5 space-y-3 text-sm text-slate-400">
                                     {fields
@@ -312,7 +361,7 @@ export default function FormBuilder({ template: initialTemplate }) {
                                                 </span>
                                                 <span>
                                                     {field.label}
-                                                    {field.required ? ' *' : ''}
+                                                    {field.required ? " *" : ""}
                                                 </span>
                                             </li>
                                         ))}
