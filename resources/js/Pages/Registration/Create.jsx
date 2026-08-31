@@ -117,7 +117,7 @@ export default function RegistrationCreate({ event }) {
 
                             return (
                                 <div key={field.key}>
-                                    <div className="flex items-center gap-[10px]">
+                                    <div className="flex items-center flex-col gap-[10px]">
                                         <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-200">
                                             <span>
                                                 {field.label}
