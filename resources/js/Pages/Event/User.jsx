@@ -24,7 +24,7 @@ function InfoItem({ icon: Icon, label, children }) {
 
             {/* Content */}
             <div className="flex flex-col gap-0.5">
-                <span className="text-[11px] leading-tight text-slate-500 sm:text-[12px]">
+                <span className="text-[11px] leading-tight text-[#99BB1C] sm:text-[12px]">
                     {label}
                 </span>
 
