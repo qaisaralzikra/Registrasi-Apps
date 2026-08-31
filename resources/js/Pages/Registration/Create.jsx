@@ -134,7 +134,7 @@ export default function RegistrationCreate({ event }) {
                                                             field.key,
                                                         )
                                                     }
-                                                    className="mb-2 text-xs font-semibold text-[#99BB1C] transition hover:underline"
+                                                    className="mb-2 text-xs text-start font-semibold text-[#99BB1C] transition hover:underline"
                                                 >
                                                     + Add Second Participant's
                                                     Name
