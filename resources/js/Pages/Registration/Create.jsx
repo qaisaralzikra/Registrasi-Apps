@@ -136,7 +136,8 @@ export default function RegistrationCreate({ event }) {
                                                     }
                                                     className="mb-2 text-xs font-semibold text-[#99BB1C] transition hover:underline"
                                                 >
-                                                    + Tambah Jawaban Kedua
+                                                    + Add Second Participant's
+                                                    Name
                                                 </button>
                                             )}
                                     </div>
