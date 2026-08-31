@@ -59,7 +59,7 @@ function User({ event }) {
                 src="/assets/BG WEB.png"
                 alt=""
                 className="
-        block h-[200px]
+        block h-[160px]
         sm:h-auto
         w-full
         object-cover
