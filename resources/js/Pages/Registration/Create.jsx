@@ -138,8 +138,7 @@ export default function RegistrationCreate({ event }) {
                                                     }
                                                     className="mb-2 text-xs text-start font-semibold text-[#99BB1C] transition hover:underline"
                                                 >
-                                                    + Add Second Participant's
-                                                    Name
+                                                    + Add Second {field.label}
                                                 </button>
                                             )}
                                     </div>
