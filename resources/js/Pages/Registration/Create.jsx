@@ -121,7 +121,9 @@ export default function RegistrationCreate({ event }) {
                                         <label className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-200">
                                             <span>
                                                 {field.label}
-                                                {field.required ? " *" : ""}
+                                                <span className="text-red-600">
+                                                    {field.required ? " *" : ""}
+                                                </span>
                                             </span>
                                         </label>
                                         {/* Tombol Tambah Jawaban (Tampil jika allowMultiple true dan jumlah jawaban < 2) */}
