@@ -1,7 +1,86 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
+import { useState } from "react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import * as XLSX from "xlsx";
 
 export default function Dashboard({ event, stats, columns, registrants }) {
+    const [isExporting, setIsExporting] = useState(false);
+
+    // 1. Fungsi Export ke PDF
+    const exportToPDF = () => {
+        setIsExporting(true);
+        const doc = new jsPDF();
+
+        // Judul Dokumen
+        doc.setFontSize(18);
+        doc.text(event.title_event, 14, 20);
+        if (event.subtitle_event) {
+            doc.setFontSize(11);
+            doc.setTextColor(100);
+            doc.text(event.subtitle_event, 14, 27);
+        }
+
+        // Siapkan Header Tabel
+        const tableHeaders = [
+            "No",
+            ...columns.map((col) => col.label),
+            "Status",
+            "Registered At",
+        ];
+
+        // Siapkan Baris Data Tabel
+        const tableRows = registrants.map((reg, index) => [
+            index + 1,
+            ...columns.map((col) => reg.data[col.key] ?? "-"),
+            reg.status,
+            reg.timestamp,
+        ]);
+
+        // Buat Tabel di PDF menggunakan autoTable
+        autoTable(doc, {
+            startY: 35,
+            head: [tableHeaders],
+            body: tableRows,
+            theme: "grid",
+            headStyles: { fillColor: [15, 23, 42] }, // Warna tema gelap (slate-900)
+            styles: { fontSize: 9 },
+        });
+
+        // Download file PDF
+        doc.save(`Registrants-${event.title_event.replace(/\s+/g, "_")}.pdf`);
+        setIsExporting(false);
+    };
+
+    // 2. Fungsi Export ke Excel / Spreadsheet (.xlsx)
+    const exportToExcel = () => {
+        setIsExporting(true);
+
+        // Format data agar rapi di Excel
+        const excelData = registrants.map((reg, index) => {
+            let row = { No: index + 1 };
+            columns.forEach((col) => {
+                row[col.label] = reg.data[col.key] ?? "-";
+            });
+            row["Status"] = reg.status;
+            row["Registered At"] = reg.timestamp;
+            return row;
+        });
+
+        // Buat Worksheet & Workbook
+        const worksheet = XLSX.utils.json_to_sheet(excelData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Registrants");
+
+        // Download file Excel
+        XLSX.writeFile(
+            workbook,
+            `Registrants-${event.title_event.replace(/\s+/g, "_")}.xlsx`
+        );
+        setIsExporting(false);
+    };
+
     const statCards = [
         {
             title: "Total Registered",
@@ -97,9 +176,28 @@ export default function Dashboard({ event, stats, columns, registrants }) {
                                     className="w-full rounded-3xl border border-white/10 bg-slate-950/90 px-4 py-3 text-sm text-slate-200 outline-none ring-1 ring-transparent transition focus:border-violet-300 focus:ring-violet-500/20"
                                 />
                             </div>
-                            <button className="inline-flex items-center justify-center rounded-3xl bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-400">
-                                Export
-                            </button>
+
+                            {/* Tombol Export PDF & Excel */}
+                            <div className="flex items-center gap-2">
+                                <button
+                                    onClick={exportToPDF}
+                                    disabled={
+                                        isExporting || registrants.length === 0
+                                    }
+                                    className="w-[150px] items-center justify-center rounded-3xl bg-amber-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-amber-400 disabled:opacity-50"
+                                >
+                                    Export PDF
+                                </button>
+                                <button
+                                    onClick={exportToExcel}
+                                    disabled={
+                                        isExporting || registrants.length === 0
+                                    }
+                                    className="w-[150px] items-center justify-center rounded-3xl bg-emerald-600 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-500 disabled:opacity-50"
+                                >
+                                    Export Excel
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -147,7 +245,7 @@ export default function Dashboard({ event, stats, columns, registrants }) {
                                                 key={i}
                                                 className="border-b border-slate-800 last:border-0"
                                             >
-                                                <td className="whitespace-nowrap px-6 py-5 text-slate-500">
+                                                <td className="whitespace-nowrap px-6 py-5 text-slate-500 text-center">
                                                     {i + 1}
                                                 </td>
 
@@ -168,7 +266,7 @@ export default function Dashboard({ event, stats, columns, registrants }) {
                                                     <span
                                                         className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
                                                             registrant.status ===
-                                                            "confirmed"
+                                                            "Hadir"
                                                                 ? "bg-emerald-500/15 text-emerald-300"
                                                                 : "bg-amber-500/15 text-amber-300"
                                                         }`}

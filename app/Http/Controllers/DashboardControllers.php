@@ -69,7 +69,7 @@ class DashboardControllers extends Controller
                 return [
                     'data'          => $row,
                     'id_registrasi' => $item->id,
-                    'status'        => $item->is_used ? 'confirmed' : ($item->status === 'hadir' ? 'confirmed' : 'pending'),
+                    'status'        => $item->is_used ? 'Hadir' : ($item->status === 'hadir' ? 'Hadir' : 'Belum Hadir'),
                     'timestamp'     => $item->created_at,
                 ];
             });
