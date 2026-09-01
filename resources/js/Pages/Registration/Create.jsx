@@ -73,7 +73,7 @@ export default function RegistrationCreate({ event }) {
                         ? "you@company.com"
                         : field.type === "tel"
                           ? "+62 812 3456 7890"
-                          : `Enter ${field.label.toLowerCase()}` +
+                          : `Masukkan ${field.label.toLowerCase()}` +
                             (index > 0 ? ` #${index + 1}` : "")
                 }
                 className="w-full rounded-3xl border border-white/10 bg-[#0b3558]/60 placeholder:text-slate-400 px-4 py-3 text-sm text-white outline-none ring-1 ring-transparent transition focus:border-violet-300 focus:ring-violet-500/20"
@@ -91,7 +91,7 @@ export default function RegistrationCreate({ event }) {
                         href={`/user/${event.title_event}`}
                         className="text-sm text-slate-500 hover:text-slate-200"
                     >
-                        ← Back to Event
+                        ← Kembali ke Acara
                     </Link>
                 </div>
                 <div className="overflow-hidden rounded-[32px] border border-white/10 bg-[#0b3558]/70 shadow-[0_15px_35px_rgba(0,0,0,0.18)] backdrop-blur-md">
@@ -138,7 +138,8 @@ export default function RegistrationCreate({ event }) {
                                                     }
                                                     className="mb-2 text-xs text-start font-semibold text-[#99BB1C] transition hover:underline"
                                                 >
-                                                    + Add Second {field.label}
+                                                    + Tambahkan Yang Kedua{" "}
+                                                    {field.label}
                                                 </button>
                                             )}
                                     </div>
@@ -197,11 +198,12 @@ export default function RegistrationCreate({ event }) {
                             disabled={processing}
                             className="w-full rounded-3xl bg-[#99BB1C] px-5 py-3 text-base font-semibold text-white transition hover:bg-[#99BB1C]/80 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            Complete Registration
+                            Selesaikan Pendaftaran
                         </button>
 
                         <p className="text-center text-xs text-slate-500">
-                            You will receive a QR e-ticket after submission
+                            Anda akan menerima tiket elektronik QR setelah
+                            pengiriman
                         </p>
                     </form>
                 </div>

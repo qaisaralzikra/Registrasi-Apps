@@ -6,6 +6,7 @@ use App\Models\Event;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Carbon;
 use Inertia\Response;
 
 class EventController extends Controller
@@ -19,13 +20,16 @@ class EventController extends Controller
     {
         $event = Event::where('title_event', $event)->first();
 
+        // Set locale Carbon ke bahasa Indonesia khusus di fungsi ini
+        Carbon::setLocale('id');
+
         return inertia('Event/User', [
             'event' => [
                 'id' => $event->id,
                 'title_event' => $event->title_event,
                 'subtitle_event' => $event->subtitle_event,
                 'desc_event' => $event->desc_event,
-                'hari' => $event->date_time_event?->translatedFormat('l'), // Contoh: Sabtu
+                'hari' => $event->date_time_event?->locale('id')->translatedFormat('l'), // Atau tambahkan locale('id') langsung di sini
                 'date' => $event->date_time_event?->format('d M Y'),        // Contoh: 26 Jul 2025
                 'time' => $event->date_time_event?->format('H:i'),          // Contoh: 08:00 (dalam format 24 jam)
                 'venue' => $event->venue,

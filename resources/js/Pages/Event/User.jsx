@@ -118,7 +118,7 @@ function User({ event }) {
             shadow-[0_0_8px_rgba(153,187,28,0.8)]
         "
                         />
-                        REGISTRATION OPEN
+                        PENDAFTARAN TELAH DIBUKA
                     </div>
                 </section>
 
@@ -155,19 +155,19 @@ function User({ event }) {
     "
                         >
                             <h2 className="text-[16px] font-bold text-slate-100 sm:text-[17px] md:text-[18px]">
-                                Event Details
+                                Rincian Acara
                             </h2>
 
                             <div className="mt-4 flex flex-col gap-3.5">
                                 <InfoItem
                                     icon={CalendarDays}
-                                    label="Date & Time"
+                                    label="Tanggal & Waktu"
                                 >
                                     {event.hari}, {event.date} · {event.time}{" "}
                                     WITA
                                 </InfoItem>
 
-                                <InfoItem icon={MapPin} label="Venue">
+                                <InfoItem icon={MapPin} label="Tempat">
                                     {event.venue}
                                 </InfoItem>
                             </div>
@@ -189,7 +189,7 @@ function User({ event }) {
     "
                         >
                             <h2 className="text-[16px] font-bold text-slate-100 sm:text-[17px] md:text-[18px]">
-                                About This Event
+                                Tentang Acara Ini
                             </h2>
 
                             <p
@@ -255,7 +255,7 @@ function User({ event }) {
 
                             {/* Title */}
                             <h2 className="text-[16px] font-bold text-slate-100">
-                                Scan to Register
+                                Pindai untuk Mendaftar
                             </h2>
 
                             {/* Description */}
@@ -269,8 +269,8 @@ function User({ event }) {
         md:text-[12px]
     "
                             >
-                                Scan this QR code at the venue or register
-                                online below
+                                Pindai kode QR ini di lokasi acara atau daftar
+                                secara online di bawah ini
                             </p>
 
                             {/* QR */}
@@ -306,7 +306,7 @@ function User({ event }) {
         sm:text-[11px]
     "
                             >
-                                Maximum of two participants.
+                                Maksimal dua peserta.
                             </span>
                             {/* Event Code */}
                             <span
@@ -319,7 +319,7 @@ function User({ event }) {
         sm:text-[11px]
     "
                             >
-                                EXP Thursday-10-September-2026
+                                EXP Kamis, 10 September 2026
                             </span>
                         </div>
 
@@ -353,22 +353,9 @@ function User({ event }) {
         sm:text-[14px]
     "
                         >
-                            Register Now
+                            Daftar Sekarang
                             <ChevronRight size={17} strokeWidth={2.3} />
                         </Link>
-
-                        {/* Payment */}
-                        <span
-                            className="
-        mt-2.5
-        text-center
-        text-[10px]
-        text-slate-600
-        sm:text-[11px]
-    "
-                        >
-                            Free · No payment required
-                        </span>
                     </div>
                 </section>
             </main>

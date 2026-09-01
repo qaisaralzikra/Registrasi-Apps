@@ -92,11 +92,11 @@ export default function RegistrationSuccess({
                         </svg>
                     </div>
                     <h1 className="text-3xl font-semibold text-white">
-                        Registration Confirmed!
+                        Pendaftaran Telah Dikonfirmasi!
                     </h1>
                     <p className="text-sm text-slate-400">
-                        Your e-ticket has been generated. Show this at the
-                        entrance.
+                        E-tiket Anda telah diterbitkan. Tunjukkan e-tiket ini di
+                        pintu masuk.
                     </p>
                 </div>
 
@@ -133,15 +133,15 @@ export default function RegistrationSuccess({
                                 <div className="grid gap-3 sm:grid-cols-2">
                                     <div>
                                         <div className="text-xs uppercase tracking-[0.24em] text-[#99bb1c]">
-                                            Date
+                                            Tanggal & Waktu
                                         </div>
                                         <div className="mt-2 text-sm text-white">
-                                            {event.date_time_event}
+                                            {event.hari}, {event.date_time_event} • {event.time} WITA
                                         </div>
                                     </div>
                                     <div>
                                         <div className="text-xs uppercase tracking-[0.24em] text-[#99bb1c]">
-                                            Venue
+                                            Tempat
                                         </div>
                                         <div className="mt-2 text-sm text-white">
                                             {event.venue}
@@ -166,7 +166,7 @@ export default function RegistrationSuccess({
                                 <div className="">
                                     <div className="mb-[20px]">
                                         <p className="text-xs uppercase tracking-[0.24em] text-[#99bb1c]">
-                                            Registration ID
+                                            Token Pendaftaran
                                         </p>
                                         <p className="mt-2 text-sm text-white">
                                             {token}
@@ -191,9 +191,7 @@ export default function RegistrationSuccess({
         disabled:opacity-50
     "
                                     >
-                                        {isSaving
-                                            ? "Saving..."
-                                            : "Save Ticket"}
+                                        {isSaving ? "Menyimpan..." : "Simpan Tiket"}
                                     </button>
                                 </div>
                             </div>
@@ -208,7 +206,7 @@ export default function RegistrationSuccess({
                         })}
                         className="flex-1 text-center rounded-3xl bg-[#99BB1C] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#99BB1C]/80"
                     >
-                        Back to Event
+                        Kembali ke Acara
                     </Link>
                 </div>
             </div>

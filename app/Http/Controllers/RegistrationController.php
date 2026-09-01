@@ -8,6 +8,7 @@ use App\Models\Registrasi;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -181,6 +182,9 @@ class RegistrationController extends Controller
         $user = $qr->user;
         $registrasi = $user->registrasi;
 
+        // Set locale Carbon ke bahasa Indonesia khusus di fungsi ini
+        Carbon::setLocale('id');
+
         // Ambil data yang diinput user
         $submittedValues = $registrasi->custom_field_values ?? [];
 
@@ -228,7 +232,9 @@ class RegistrationController extends Controller
             'event' => [
                 'id'              => $event->id,
                 'title_event'     => $event->title_event,
+                'hari' => $event->date_time_event?->locale('id')->translatedFormat('l'),
                 'date_time_event' => $event->date_time_event?->format('d M Y'),
+                'time' => $event->date_time_event?->format('H:i'),
                 'venue'           => $event->venue,
             ],
             'attendeeDetails' => $attendeeDetails,
