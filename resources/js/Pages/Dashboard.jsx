@@ -111,6 +111,15 @@ export default function Dashboard({ event, stats, columns, registrants }) {
         },
     ];
 
+    const handleStatusChange = (userId, newStatus) => {
+    router.post('/verify/user', {
+        id_user: userId,
+        status: newStatus,
+    }, {
+        preserveScroll: true, // Mencegah halaman scroll ke atas setelah update
+    });
+};
+
     return (
         <AuthenticatedLayout
             header={
@@ -263,17 +272,23 @@ export default function Dashboard({ event, stats, columns, registrants }) {
                                                 ))}
 
                                                 <td className="whitespace-nowrap px-6 py-5">
-                                                    <span
-                                                        className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-                                                            registrant.status ===
-                                                            "Hadir"
-                                                                ? "bg-emerald-500/15 text-emerald-300"
-                                                                : "bg-amber-500/15 text-amber-300"
-                                                        }`}
-                                                    >
-                                                        {registrant.status}
-                                                    </span>
-                                                </td>
+        <select
+            value={registrant.status}
+            onChange={(e) => handleStatusChange(registrant.id_user, e.target.value)}
+            className={`rounded-full px-3 py-1 text-xs font-semibold cursor-pointer border-0 outline-none focus:ring-2 focus:ring-emerald-500 ${
+                registrant.status === "Hadir"
+                    ? "bg-emerald-500/15 text-emerald-300"
+                    : "bg-amber-500/15 text-amber-300"
+            }`}
+        >
+            <option value="Hadir" className="bg-slate-800 text-emerald-300">
+                Hadir
+            </option>
+            <option value="Belum Hadir" className="bg-slate-800 text-amber-300">
+                Belum Hadir
+            </option>
+        </select>
+    </td>
 
                                                 <td className="whitespace-nowrap px-6 py-5 text-slate-500">
                                                     {registrant.timestamp}
