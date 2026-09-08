@@ -5,6 +5,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\FormBuilderController;
 use App\Http\Controllers\RegistrationController;
 use App\Models\QrCode;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
@@ -57,6 +58,24 @@ Route::get('/user/{event}', [EventController::class, 'user'])->name('user');
 
 Route::get('/events/create', [EventController::class, 'create'])->name('events.create');
 Route::post('/events', [EventController::class, 'store'])->name('events.store');
+
+Route::post('verify/user', function (Request $request) {
+    $request->validate([
+        'id_user' => 'required|integer',
+        'status'  => 'required|string|in:Hadir,Belum Hadir', // Tambahkan validasi status jika perlu
+    ]);
+
+    $qrCode = QrCode::where('id_user', $request->id_user)->firstOrFail();
+
+    $qrCode->update([
+        'is_used' => $request->status === 'Hadir', // set true jika Hadir, false jika Belum Hadir
+    ]);
+
+    return response()->json([
+        'message' => 'Status berhasil diperbarui',
+        'is_used' => $qrCode->is_used
+    ]);
+});
 
 Route::get('/events/{events}/register', [RegistrationController::class, 'create'])->name('events.register');
 Route::post('/events/{events}/register', [RegistrationController::class, 'store'])->name('events.register.store');
