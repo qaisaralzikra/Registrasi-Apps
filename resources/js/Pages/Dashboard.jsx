@@ -8,6 +8,7 @@ import * as XLSX from "xlsx";
 export default function Dashboard({ event, stats, columns, registrants }) {
     const [isExporting, setIsExporting] = useState(false);
 
+    console.log(registrants)
     // 1. Fungsi Export ke PDF
     const exportToPDF = () => {
         setIsExporting(true);
