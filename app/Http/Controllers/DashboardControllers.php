@@ -39,7 +39,6 @@ class DashboardControllers extends Controller
                 'qr_codes.is_used'
             )
             ->orderBy('users.created_at', 'desc')
-            ->limit(10)
             ->get()
             ->map(function ($item) use ($columns) {
                 $fields = json_decode($item->custom_field_values, true) ?? [];
